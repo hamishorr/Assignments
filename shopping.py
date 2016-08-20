@@ -15,9 +15,7 @@ items_file.close()
 
 print(items)
 
-''' this indexes the 'nth' column in the 'ith' row >>>(items[i][n])'''
-
-''' this divides the 'ith' row up by it's commas >>> items[i].split(',')'''
+''' to index the 'ith' column in the 'jth' row >>>  items[j][i]'''
 
 print("Welcome to the Inventory")
 print('MENU:')
@@ -80,7 +78,7 @@ while choice != 'Q':
 
         items += [new_item]
 
-    save_file = open('items_new.csv', 'w')
+    save_file = open('items.csv', 'w')
 
     for i in range(0, len(items)):
         line = [items[i][0] + ',' + items[i][1] + ',' + items[i][2] + ',' + items[i][3]]
@@ -98,26 +96,3 @@ while choice != 'Q':
 print("Thank-you for using Inventory control!")
 
 
-
-
-
-
-items_file.close()
-
-'''print("Welcome to the Inventory")
-
-items_file = open("items.csv", "r")
-
-items = items_file.readline()
-while items_file.readline() != '':
-    items += items_file.readline()
-items_file.close()
-
-items
-
-
-
-
-print(items)
-
-items_file.close()'''
