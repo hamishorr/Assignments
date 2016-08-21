@@ -50,8 +50,8 @@ while choice != 'Q':
                 complete_count += 1
                 print("Order complete: {:1} x {:15}  at ${:6} each".format(items[i][2], items[i][0], items[i][1]))
                 total_cost += float(items[i][2]) * float(items[i][1])
-            print("Total Charges: ${}".format(total_cost))
-            print('')
+        print("Total Charges: ${}".format(total_cost))
+        print('')
         if complete_count == 0:
             print("No complete orders! Choose another option.")
             print('')
@@ -97,6 +97,7 @@ while choice != 'Q':
         new_item = [name, price, quantity, status.lower() + '\n']
         print("New item saved!")
         items += [new_item]
+        rows += 1
 
     else:
         print("Choice invalid!")
