@@ -1,4 +1,3 @@
-
 print('')
 print("Welcome to Inventory Manager by Hamish Orr")
 print('')
@@ -16,8 +15,6 @@ items_file = open("items.csv", "r")
 for i in range(0, rows):
     items[i] = items_file.readline().split(',')
 items_file.close()
-
-
 
 ''' to index the 'ith' column in the 'jth' row >>>  items[j][i]'''
 
@@ -71,29 +68,24 @@ while choice != 'Q':
                 print('Error! Item Not Found!')
                 print('Name of complete item?')
                 name = input(">>").upper()
-
         for i in range(0, rows):
             if items[i][0].upper() == name:
                 items[i][3] = 'c\n'
-
         print('Item marked as complete!')
 
     elif choice == 'A':
         print("Item name?")
         name = input('>>')
-
         print("Item price?")
         price = (input('>>'))
         while str(price).isdecimal():
             print("Please enter price in $$.cc format.")
             price = input('>>')
-
         print("Quantity?")
         quantity = input('>>')
         while not str(quantity).isdecimal():
             print("Please enter the exact quantity: (eg. 1,2,3,4...)")
             quantity = input('>>')
-
         print("Required or Complete? enter 'R' or 'C'")
         status = input('>>').upper()
 
@@ -102,16 +94,12 @@ while choice != 'Q':
         else:
             print("Error! Required or Complete? enter 'R' or 'C'")
             status = input('>>')
-
         new_item = [name, price, quantity, status.lower() + '\n']
         print("New item saved!")
-
         items += [new_item]
 
     else:
         print("Choice invalid!")
-
-
     save_file = open('items.csv', 'w')
 
     for i in range(0, len(items)):
@@ -119,7 +107,6 @@ while choice != 'Q':
         save_file.writelines(line)
     save_file.close()
 
-    '''print(items)'''
     print('MENU:')
     print("     R - Show list of required items")
     print("     C - Show list of completed items")
