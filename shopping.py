@@ -1,4 +1,8 @@
 
+print('')
+print("Welcome to Inventory Manager by Hamish Orr")
+print('')
+print("Current items are:")
 '''Scan file for number of rows to create list'''
 items_file = open("items.csv", "r")
 rows = 0
@@ -13,11 +17,10 @@ for i in range(0, rows):
     items[i] = items_file.readline().split(',')
 items_file.close()
 
-print(items)
+
 
 ''' to index the 'ith' column in the 'jth' row >>>  items[j][i]'''
 
-print("Welcome to the Inventory")
 print('MENU:')
 print("     R - Show list of required items")
 print("     C - Show list of completed items")
@@ -28,11 +31,38 @@ choice = input(">>").upper()
 
 while choice != 'Q':
 
-    if choice == 'M':
-        print('Name of complete item?')
-        name = input(">>").upper()
+    if choice == 'R':
+        required_count = 0
+        total_cost = 0
+        for i in range(0, rows):
+            if 'r' in items[i][3]:
+                required_count += 1
+                print("Required: {:1} x {:15} at ${:6} each".format(items[i][2], items[i][0], items[i][1]))
+                total_cost += float(items[i][2])*float(items[i][1])
+        print("Total Cost: ${}".format(total_cost))
+        print('')
+        if required_count == 0:
+            print("All orders are complete! Choose another option.")
+            print('')
 
+    elif choice == 'C':
+        complete_count = 0
+        total_cost = 0
+        for i in range(0,rows):
+            if 'c' in items[i][3]:
+                complete_count += 1
+                print("Order complete: {:1} x {:15}  at ${:6} each".format(items[i][2], items[i][0], items[i][1]))
+                total_cost += float(items[i][2]) * float(items[i][1])
+            print("Total Charges: ${}".format(total_cost))
+            print('')
+        if complete_count == 0:
+            print("No complete orders! Choose another option.")
+            print('')
+
+    elif choice == 'M':
+        print('Name of complete item?')
         match = 0
+        name = input(">>").upper()
         while match == 0:
             for i in range(0, rows):
                 if name in items[i][0].upper():
@@ -48,7 +78,7 @@ while choice != 'Q':
 
         print('Item marked as complete!')
 
-    if choice == 'A':
+    elif choice == 'A':
         print("Item name?")
         name = input('>>')
 
@@ -78,6 +108,10 @@ while choice != 'Q':
 
         items += [new_item]
 
+    else:
+        print("Choice invalid!")
+
+
     save_file = open('items.csv', 'w')
 
     for i in range(0, len(items)):
@@ -92,7 +126,5 @@ while choice != 'Q':
     print("     A - Add a new item")
     print("     M - Mark an item as complete")
     print("     Q - Quit")
-    choice = input(">>")
+    choice = input(">>").upper()
 print("Thank-you for using Inventory control!")
-
-
