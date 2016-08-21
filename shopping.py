@@ -1,7 +1,6 @@
 print('')
 print("Welcome to Inventory Manager by Hamish Orr")
 print('')
-print("Current items are:")
 '''Scan file for number of rows to create list'''
 items_file = open("items.csv", "r")
 rows = 0
