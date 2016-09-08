@@ -1,137 +1,109 @@
 
-'''Inventory Manager by Hamish Orr'''
+''' By Hamish Orr URL: https://github.com/hamishorr/Assignments
 
-'''psudocode
-open file
-display list of options
-while choice is not quit
+    sudocode
 
-    if choice is required items
-    display the items containing 'r' in the status column
-    display these items in an ordered list starting from priority 1 to 3 <<<still not ORDERED
-    display number of items and total price
+    open file
+    display list of options
+        while choice is not quit
+            if choice is required items
+                display the items containing 'r' in the status column
+                display these items in an ordered list starting from priority 1 to 3
+                display number of items and total price
 
-    if choice is complete items
-    same as above but for complete
+            if choice is complete items
+                same as above but for complete
 
-    if choice is mark as complete
-    lookup item by number displayed <<< currently searches by name..
+            if choice is mark as complete
+                if all items are already complete print "no required items"
+                lookup item by number displayed (ascending order)
+                save the item as complete and display a notification
 
-    if add item
-    error check the user to enter numbers and letters where appropriate
+            if add item
+                error check the user to enter numbers and letters where appropriate
+                add the new item to the main items list
+        when choice is to quit
+                save the file, displaying the number of items saved
+                display closing message
+                
+'''
 
-    if quit
-    quit and save the file'''
 
 def main():
 
     items = open_file()
-    ''' to index the 'ith' column in the 'jth' row >>>  items[j][i]'''
-
-    print('MENU:')
-    print("     R - Show list of required items")
-    print("     C - Show list of completed items")
-    print("     A - Add a new item")
-    print("     M - Mark an item as complete")
-    print("     Q - Quit")
+    display_menu()
     choice = input(">>").upper()
 
     while choice != 'Q':
         if choice == 'R':
-            required = 0
-            total_cost = 0
-            print("Required Items:")
-            print('')
-            for i in range(len(items)):
-                if items[i][3] == 'r':
-                    required += 1
-                    print("{:3}.  {:18} $  {:6} ({:2})".format(required-1, items[i][0], format(float(items[i][1]), '.2f'), items[i][2]))
-                    total_cost += float(float(items[i][1]))
-            print('')
-            print("Total expected price for {} items: ${}".format(required, total_cost))
-            print('')
-            if required == 0:
-                print("All orders are complete! Choose another option.")
-                print('')
+            required_list = status_list(items, 'r')
+            if not required_list:
+                print("No required items!")
+            else:
+                display_prioritised(required_list)
 
         elif choice == 'C':
-            complete = 0
-            total_cost = 0
-            print("Complete Orders:")
-            print('')
-            for i in range(len(items)):
-                if items[i][3] == 'c':
-                    complete += 1
-                    print("{:3}.  {:18} $  {:6} ({:2})".format(complete-1, items[i][0], format(float(items[i][1]), '.2f'), items[i][2]))
-                    total_cost += float(items[i][1])
-            print('')
-            print("Total expected price for {} items: ${}".format(complete, total_cost))
-            print('')
-            if complete == 0:
-                print("No complete orders! Choose another option.")
-                print('')
+            complete_list = status_list(items, 'c')
+            if not complete_list:
+                print("No complete items!")
+            else:
+                display_prioritised(complete_list)
 
         elif choice == 'M':
-            print('Name of complete item?')
-            match = 0
-            name = input(">>").upper()
-            while match == 0:
-                for i in range(len(items)):
-                    if name in items[i][0].upper():
-                        match += 1
-                if match == 0:
-                    print('Error! Item Not Found!')
-                    print('Name of complete item?')
-                    name = input(">>").upper()
-            for i in range(len(items)):
-                if items[i][0].upper() == name:
-                    items[i][3] = 'c'
-            print('Item marked as complete!')
+            required_list = status_list(items, 'r')
+            if not required_list:
+                print("No required items!")
+            else:
+                display_prioritised(required_list)
+                print('Enter the number of an item to mark as complete')
+                item_number = input('>>')
+                while not item_number.isdecimal() or not is_numbers(item_number):
+                    print('Invalid input; enter a number')
+                    item_number = input('>>')
+                while int(item_number) < 0:
+                    print('Invalid item number')
+                    item_number = input('>>')
+                while not int(item_number) <= len(required_list)-1:
+                    print('Invalid item number')
+                    item_number = input('>>')
+                required_list[int(item_number)][3] = 'c'
+                print('{} marked as complete'.format(required_list[int(item_number)][0]))
 
         elif choice.upper() == 'A':
             print("Item name?")
             name = input('>>')
             while name == '' or name.strip(' ') == '':
-                print('Name input cannot be blank!')
-                name = input('>>')
-
-            form = False
-            while not form:
-                print("Item Price:")
-                price = input('>>')
-                check = price.replace('.', '0')
-                if check != "".join(i for i in check if i in "0123456789"):
-                    print('Please enter numbers! Letters are not accepted!')
-                    form = False
-                else:
-                    form = True
+                name = input('Input name:')
+            price = input('Price:')
+            while not is_numbers(price):
+                print('Invalid input; enter a valid number')
+                price = input('Price:')
             while float(price) < 0:
-                print("Price cannot be negative!")
-                price = input('>>')
-            print("Priority(1-3) ?")
+                print('Invalid input; enter a valid number')
+                price = input('Price:')
+            print("Priority:")
             priority = input('>>')
-            while not priority.isdecimal():
-                print("Please enter a positive integer from 1-3")
+            while not priority.isdecimal() or not is_numbers(priority):
+                print("Priority must 1, 2 or 3")
                 priority = input('>>')
             while int(priority) < 1 or int(priority) > 3:
                 print("Priority must 1, 2 or 3")
                 priority = input('>>')
             status = 'R'
             new_item = [name, price, priority, status.lower()]
-            print("New item saved!")
+            print("{}, ${} (priority {}) added to shopping list".format(new_item[0], format(float(new_item[1])
+                                                                                               , '.2f'), new_item[2]))
             items.append(new_item)
         else:
-            print("Choice invalid!")
+            print("Invalid menu choice")
 
-        print('MENU:')
-        print("     R - Show list of required items")
-        print("     C - Show list of completed items")
-        print("     A - Add a new item")
-        print("     M - Mark an item as complete")
-        print("     Q - Quit")
+        display_menu()
         choice = input(">>").upper()
+
     save_file(items)
-    print("Thank-you for using Inventory control!")
+    print("{} items saved to items.csv".format(len(items)))
+    print("Have a nice day :)")
 
 
 def open_file():
@@ -152,6 +124,44 @@ def save_file(lines):
         file.writelines(line)
     file.close()
     return 'Any changes have been saved!'
+
+
+def is_numbers(string):
+    check = string.replace('.', '0')
+    if check != "".join(i for i in check if i in "0123456789"):
+        return False
+    else:
+        return True
+
+
+def status_list(main_list, status):
+    read_list = []
+    for i in range(len(main_list)):
+        if main_list[i][3] == status:
+            read_list.append(main_list[i])
+    if not read_list:
+        ordered_list = []
+    else:
+        from operator import itemgetter
+        ordered_list = sorted(read_list, key=itemgetter(2))
+    return ordered_list
+
+
+def display_menu():
+    print('MENU:')
+    print("R - Show list of required items")
+    print("C - Show list of completed items")
+    print("A - Add a new item")
+    print("M - Mark an item as complete")
+    print("Q - Quit")
+
+
+def display_prioritised(lines):
+    total_cost = 0
+    for i in range(len(lines)):
+        print("{}.  {:18} $  {:5} ({})".format(i, lines[i][0], format(float(lines[i][1]), '.2f'), lines[i][2]))
+        total_cost += float(lines[i][1])
+    print("Total expected price for {} items: ${}".format(len(lines), total_cost))
 
 
 main()
