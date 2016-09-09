@@ -1,5 +1,4 @@
-
-''' By Hamish Orr URL: https://github.com/hamishorr/Assignments
+''' By Hamish Orr,  URL: https://github.com/hamishorr/Assignments
 
     sudocode
 
@@ -7,6 +6,7 @@
     display list of options
         while choice is not quit
             if choice is required items
+                if all items are complete print "no required items"
                 display the items containing 'r' in the status column
                 display these items in an ordered list starting from priority 1 to 3
                 display number of items and total price
@@ -25,12 +25,11 @@
         when choice is to quit
                 save the file, displaying the number of items saved
                 display closing message
-                
+
 '''
 
 
 def main():
-
     items = open_file()
     display_menu()
     choice = input(">>").upper()
@@ -41,60 +40,76 @@ def main():
             if not required_list:
                 print("No required items!")
             else:
-                display_list(required_list)
+                display_prioritised(required_list)
 
         elif choice == 'C':
             complete_list = status_list(items, 'c')
             if not complete_list:
                 print("No complete items!")
             else:
-                display_list(complete_list)
+                display_prioritised(complete_list)
 
         elif choice == 'M':
             required_list = status_list(items, 'r')
             if not required_list:
                 print("No required items!")
             else:
-                display_list(required_list)
+                display_prioritised(required_list)
                 print('Enter the number of an item to mark as complete')
-                item_number = input('>>')
-                while not item_number.isdecimal() or not is_numbers(item_number):
-                    print('Invalid input; enter a number')
+                priority_correct = False
+                while not priority_correct:
                     item_number = input('>>')
-                while int(item_number) < 0:
-                    print('Invalid item number')
-                    item_number = input('>>')
-                while not int(item_number) <= len(required_list)-1:
-                    print('Invalid item number')
-                    item_number = input('>>')
-                required_list[int(item_number)][3] = 'c'
-                print('{} marked as complete'.format(required_list[int(item_number)][0]))
+                    if is_empty(item_number):
+                        print('Invalid input; enter a number')
+                    elif not item_number.isdecimal() or not is_numbers(item_number):
+                        print('Invalid input; enter a number')
+                    elif int(item_number) < 0:
+                        print('Invalid item number')
+                    elif not int(item_number) <= len(required_list) - 1:
+                        print('Invalid item number')
+                    else:
+                        priority_correct = True
+                        required_list[int(item_number)][3] = 'c'
+                        print('{} marked as complete'.format(required_list[int(item_number)][0]))
 
-        elif choice.upper() == 'A':
+        elif choice == 'A':
+            new_item = create_lists(4)
             print("Item name?")
             name = input('>>')
-            while name == '' or name.strip(' ') == '':
+            while is_empty(name):
+                print('Invalid input; enter a name')
                 name = input('Input name:')
-            price = input('Price:')
-            while not is_numbers(price):
-                print('Invalid input; enter a valid number')
-                price = input('Price:')
-            while float(price) < 0:
-                print('Invalid input; enter a valid number')
-                price = input('Price:')
+            new_item[0] = name
+            price_correct = False
+            while not price_correct:
+                price = input('Price:$')
+                if is_empty(price):
+                    print('Invalid input; enter a valid number')
+                elif not is_numbers(price):
+                    print('Invalid input; enter a valid number')
+                elif float(price) < 0:
+                    print('Invalid input; enter a valid number')
+                else:
+                    price_correct = True
+                    new_item[1] = price
             print("Priority:")
-            priority = input('>>')
-            while not priority.isdecimal() or not is_numbers(priority):
-                print("Priority must 1, 2 or 3")
+            priority_correct = False
+            while not priority_correct:
                 priority = input('>>')
-            while int(priority) < 1 or int(priority) > 3:
-                print("Priority must 1, 2 or 3")
-                priority = input('>>')
-            status = 'R'
-            new_item = [name, price, priority, status.lower()]
+                if is_empty(priority):
+                    print("Priority must 1, 2 or 3")
+                elif not priority.isdecimal() or not is_numbers(priority):
+                    print("Priority must 1, 2 or 3")
+                elif int(priority) < 1 or int(priority) > 3:
+                    print("Priority must 1, 2 or 3")
+                else:
+                    priority_correct = True
+                    new_item[2] = priority
+            new_item[3] = 'r'
             print("{}, ${} (priority {}) added to shopping list".format(new_item[0], format(float(new_item[1])
-                                                                                               , '.2f'), new_item[2]))
+                                                                                            , '.2f'), new_item[2]))
             items.append(new_item)
+
         else:
             print("Invalid menu choice")
 
@@ -135,7 +150,10 @@ def is_numbers(string):
 
 
 def status_list(main_list, status):
-    read_list = [item for item in main_list if status == item[3]]
+    read_list = []
+    for i in range(len(main_list)):
+        if main_list[i][3] == status:
+            read_list.append(main_list[i])
     if not read_list:
         ordered_list = []
     else:
@@ -153,7 +171,7 @@ def display_menu():
     print("Q - Quit")
 
 
-def display_list(lines):
+def display_prioritised(lines):
     total_cost = 0
     for i in range(len(lines)):
         print("{}.  {:18} $  {:5} ({})".format(i, lines[i][0], format(float(lines[i][1]), '.2f'), lines[i][2]))
@@ -161,5 +179,18 @@ def display_list(lines):
     print("Total expected price for {} items: ${}".format(len(lines), total_cost))
 
 
-main()
+def create_lists(number):
+    new_list = []
+    for i in range(number):
+        new_list.append([])
+    return new_list
 
+
+def is_empty(string):
+    while string == '' or string.strip(' ') == '':
+        return True
+    else:
+        return False
+
+
+main()
