@@ -1,6 +1,6 @@
 ''' By Hamish Orr,  URL: https://github.com/hamishorr/Assignments
 
-    sudocode
+    pseudocode
 
     open file
     display list of options
@@ -40,21 +40,21 @@ def main():
             if not required_list:
                 print("No required items!")
             else:
-                display_prioritised(required_list)
+                display(required_list)
 
         elif choice == 'C':
             complete_list = status_list(items, 'c')
             if not complete_list:
                 print("No complete items!")
             else:
-                display_prioritised(complete_list)
+                display(complete_list)
 
         elif choice == 'M':
             required_list = status_list(items, 'r')
             if not required_list:
                 print("No required items!")
             else:
-                display_prioritised(required_list)
+                display(required_list)
                 print('Enter the number of an item to mark as complete')
                 priority_correct = False
                 while not priority_correct:
@@ -171,7 +171,7 @@ def display_menu():
     print("Q - Quit")
 
 
-def display_prioritised(lines):
+def display(lines):
     total_cost = 0
     for i in range(len(lines)):
         print("{}.  {:18} $  {:5} ({})".format(i, lines[i][0], format(float(lines[i][1]), '.2f'), lines[i][2]))
