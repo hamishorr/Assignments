@@ -41,21 +41,21 @@ def main():
             if not required_list:
                 print("No required items!")
             else:
-                display_prioritised(required_list)
+                display_list(required_list)
 
         elif choice == 'C':
             complete_list = status_list(items, 'c')
             if not complete_list:
                 print("No complete items!")
             else:
-                display_prioritised(complete_list)
+                display_list(complete_list)
 
         elif choice == 'M':
             required_list = status_list(items, 'r')
             if not required_list:
                 print("No required items!")
             else:
-                display_prioritised(required_list)
+                display_list(required_list)
                 print('Enter the number of an item to mark as complete')
                 item_number = input('>>')
                 while not item_number.isdecimal() or not is_numbers(item_number):
@@ -135,10 +135,12 @@ def is_numbers(string):
 
 
 def status_list(main_list, status):
-    read_list = []
+
+    read_list = [item for item in main_list if status == item[3]]
+    '''read_list = []
     for i in range(len(main_list)):
         if main_list[i][3] == status:
-            read_list.append(main_list[i])
+            read_list.append(main_list[i])'''
     if not read_list:
         ordered_list = []
     else:
@@ -156,7 +158,7 @@ def display_menu():
     print("Q - Quit")
 
 
-def display_prioritised(lines):
+def display_list(lines):
     total_cost = 0
     for i in range(len(lines)):
         print("{}.  {:18} $  {:5} ({})".format(i, lines[i][0], format(float(lines[i][1]), '.2f'), lines[i][2]))
