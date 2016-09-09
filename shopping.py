@@ -137,10 +137,6 @@ def is_numbers(string):
 def status_list(main_list, status):
 
     read_list = [item for item in main_list if status == item[3]]
-    '''read_list = []
-    for i in range(len(main_list)):
-        if main_list[i][3] == status:
-            read_list.append(main_list[i])'''
     if not read_list:
         ordered_list = []
     else:
