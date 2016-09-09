@@ -135,7 +135,6 @@ def is_numbers(string):
 
 
 def status_list(main_list, status):
-
     read_list = [item for item in main_list if status == item[3]]
     if not read_list:
         ordered_list = []
